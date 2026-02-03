@@ -1,112 +1,221 @@
+import { Colors, Fonts } from '@/constants/theme';
+import { useAuth } from '@/context/AuthProvider';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { supabase } from '@/lib/supabase';
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Calendar, MapPin, ReceiptText } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+export default function ExploreScreen() {
+  const { user } = useAuth();
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const colorScheme = useColorScheme() ?? 'light';
+  const theme = Colors[colorScheme];
 
-export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
+  useEffect(() => {
+    if (user) fetchBookings();
+  }, [user]);
+
+  const fetchBookings = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('bookings')
+        .select(`
+          *,
+          trip:trips(*)
+        `)
+        .eq('user_id', user?.id)
+        .order('booked_at', { ascending: false });
+
+      if (error) throw error;
+      setBookings(data || []);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderBookingItem = ({ item }: { item: any }) => (
+    <View style={[styles.bookingCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+      <View style={styles.cardHeader}>
         <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
+          source={{ uri: item.trip.main_featured_image_url }}
+          style={styles.tripImage}
+          contentFit="cover"
         />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+        <View style={styles.headerInfo}>
+          <Text style={[styles.tripName, { color: theme.heading }]}>{item.trip.name}</Text>
+          <View style={styles.statusBadge}>
+            <Text style={styles.statusText}>{item.status.toUpperCase()}</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.cardBody}>
+        <View style={styles.detailRow}>
+          <Calendar size={16} color={theme.tint} />
+          <Text style={[styles.detailText, { color: theme.text }]}>
+            {new Date(item.start_date).toLocaleDateString()}
+          </Text>
+        </View>
+        <View style={styles.detailRow}>
+          <MapPin size={16} color={theme.tint} />
+          <Text style={[styles.detailText, { color: theme.text }]}>
+            {item.trip.short_description}
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.cardFooter}>
+        <Text style={[styles.price, { color: theme.tint }]}>${item.total_price}</Text>
+        <TouchableOpacity style={styles.invoiceBtn}>
+          <ReceiptText size={18} color={theme.tint} />
+          <Text style={[styles.invoiceText, { color: theme.tint }]}>Invoice</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  if (!user) {
+    return (
+      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+        <Text style={[styles.title, { color: theme.heading }]}>My Bookings</Text>
+        <Text style={[styles.message, { color: theme.text }]}>Please sign in to view your bookings</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.title, { color: theme.heading }]}>My Bookings</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color={theme.tint} />
+      ) : bookings.length === 0 ? (
+        <View style={styles.centered}>
+          <Text style={[styles.message, { color: theme.text }]}>No bookings found. Start exploring!</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={bookings}
+          keyExtractor={(item) => item.id}
+          renderItem={renderBookingItem}
+          contentContainerStyle={styles.listContent}
+          refreshing={loading}
+          onRefresh={fetchBookings}
+        />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    paddingTop: 60,
   },
-  titleContainer: {
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    fontFamily: Fonts.heading,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  message: {
+    fontSize: 16,
+    fontFamily: Fonts.body,
+    textAlign: 'center',
+  },
+  listContent: {
+    padding: 20,
+  },
+  bookingCard: {
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: 20,
+    overflow: 'hidden',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  cardHeader: {
     flexDirection: 'row',
+    padding: 12,
+  },
+  tripImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  headerInfo: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  tripName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontFamily: Fonts.heading,
+    marginBottom: 4,
+  },
+  statusBadge: {
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+  },
+  statusText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#666',
+  },
+  cardBody: {
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
+    marginBottom: 4,
+  },
+  detailText: {
+    fontSize: 14,
+    fontFamily: Fonts.body,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.05)',
+  },
+  price: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontFamily: Fonts.heading,
+  },
+  invoiceBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  invoiceText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    fontFamily: Fonts.body,
   },
 });

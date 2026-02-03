@@ -1,0 +1,176 @@
+import { Colors, Fonts } from '@/constants/theme';
+import { useAuth } from '@/context/AuthProvider';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useRouter } from 'expo-router';
+import { Bell, CreditCard, LogOut, Settings, Shield, User } from 'lucide-react-native';
+import React from 'react';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+export default function ProfileScreen() {
+    const { user, signOut } = useAuth();
+    const colorScheme = useColorScheme() ?? 'light';
+    const theme = Colors[colorScheme];
+    const router = useRouter();
+
+    const handleSignOut = async () => {
+        try {
+            await signOut();
+            router.replace('/(auth)/signin');
+        } catch (error: any) {
+            Alert.alert('Error', error.message);
+        }
+    };
+
+    if (!user) {
+        return (
+            <View style={[styles.centered, { backgroundColor: theme.background }]}>
+                <Text style={[styles.message, { color: theme.text }]}>Please sign in to view your profile</Text>
+                <TouchableOpacity
+                    style={[styles.loginBtn, { backgroundColor: theme.btnBackground }]}
+                    onPress={() => router.push('/(auth)/signin')}
+                >
+                    <Text style={[styles.btnText, { color: theme.btnText }]}>Sign In</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    const menuItems = [
+        { icon: <Settings size={22} color={theme.tint} />, label: 'Settings' },
+        { icon: <Bell size={22} color={theme.tint} />, label: 'Notifications' },
+        { icon: <CreditCard size={22} color={theme.tint} />, label: 'Payment Methods' },
+        { icon: <Shield size={22} color={theme.tint} />, label: 'Privacy & Security' },
+    ];
+
+    return (
+        <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+            <View style={[styles.header, { backgroundColor: theme.card }]}>
+                <View style={[styles.avatarContainer, { backgroundColor: theme.background, borderColor: theme.tint }]}>
+                    <User size={50} color={theme.tint} />
+                </View>
+                <Text style={[styles.userName, { color: theme.heading }]}>
+                    {user.user_metadata?.first_name} {user.user_metadata?.last_name}
+                </Text>
+                <Text style={[styles.userEmail, { color: theme.secondaryText }]}>{user.email}</Text>
+            </View>
+
+            <View style={styles.section}>
+                {menuItems.map((item, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={[styles.menuItem, { borderBottomColor: theme.border }]}
+                    >
+                        <View style={styles.menuLeft}>
+                            {item.icon}
+                            <Text style={[styles.menuLabel, { color: theme.text }]}>{item.label}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </View>
+
+            <TouchableOpacity
+                style={[styles.signOutBtn, { borderColor: theme.tint }]}
+                onPress={handleSignOut}
+            >
+                <LogOut size={20} color={theme.tint} />
+                <Text style={[styles.signOutText, { color: theme.tint }]}>Sign Out</Text>
+            </TouchableOpacity>
+
+            <View style={{ height: 40 }} />
+        </ScrollView>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    header: {
+        alignItems: 'center',
+        paddingVertical: 40,
+        borderBottomLeftRadius: 32,
+        borderBottomRightRadius: 32,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    avatarContainer: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        marginBottom: 16,
+    },
+    userName: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        fontFamily: Fonts.heading,
+    },
+    userEmail: {
+        fontSize: 16,
+        fontFamily: Fonts.body,
+        marginTop: 4,
+    },
+    section: {
+        marginTop: 30,
+        paddingHorizontal: 20,
+    },
+    menuItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 18,
+        borderBottomWidth: 1,
+    },
+    menuLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 15,
+    },
+    menuLabel: {
+        fontSize: 16,
+        fontWeight: '500',
+        fontFamily: Fonts.body,
+    },
+    signOutBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+        marginTop: 40,
+        marginHorizontal: 30,
+        height: 56,
+        borderRadius: 16,
+        borderWidth: 1,
+    },
+    signOutText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        fontFamily: Fonts.body,
+    },
+    loginBtn: {
+        marginTop: 20,
+        paddingHorizontal: 30,
+        paddingVertical: 12,
+        borderRadius: 8,
+    },
+    btnText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    message: {
+        fontSize: 16,
+        fontFamily: Fonts.body,
+        textAlign: 'center',
+    },
+});

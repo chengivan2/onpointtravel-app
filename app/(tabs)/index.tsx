@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'expo-router';
 import { Bell } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -91,29 +91,25 @@ export default function HomeScreen() {
         </View>
 
         {/* Hero Section */}
-        <ImageBackground
-          source={{ uri: 'https://res.cloudinary.com/dzev36m6m/image/upload/v1700000000/herobgimage.jpg' }}
-          style={styles.hero}
-          imageStyle={{ borderRadius: 20 }}
-        >
-          <View style={styles.heroOverlay}>
-            {trips.length > 0 ? (
-              <View style={styles.featuredHeroCard}>
-                <Text style={[styles.heroSubtitle, { color: '#fff', marginBottom: 12, fontWeight: 'bold', textTransform: 'uppercase' }]}>Featured Adventure</Text>
-                <TripCard
-                  trip={trips[0]}
-                  onPress={() => router.push(`/trip-details/${trips[0].id}`)}
-                  style={{ width: '100%', maxWidth: 350 }}
-                />
-              </View>
-            ) : (
-              <>
-                <Text style={[styles.heroTitle, { color: '#fff' }]}>Discover More Travel Time</Text>
-                <Text style={[styles.heroSubtitle, { color: '#fff' }]}>Straight To the Point</Text>
-              </>
+        {/* Featured Trips Carousel */}
+        <View style={styles.carouselSection}>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={trips.slice(0, 5)}
+            keyExtractor={(item) => `featured-${item.id}`}
+            renderItem={({ item }) => (
+              <TripCard
+                trip={item}
+                onPress={() => router.push(`/trip-details/${item.id}`)}
+                style={styles.carouselCard}
+              />
             )}
-          </View>
-        </ImageBackground>
+            contentContainerStyle={styles.carouselList}
+            snapToInterval={320} // Width + gap approximately
+            decelerationRate="fast"
+          />
+        </View>
 
         {/* Top Destinations */}
         <View style={styles.section}>
@@ -197,33 +193,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  hero: {
-    height: 400,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-    borderRadius: 20,
+  carouselSection: {
+    paddingVertical: 10,
   },
-  heroOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+  carouselList: {
+    paddingHorizontal: 20,
+    gap: 16,
   },
-  heroTitle: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontFamily: Fonts.heading,
-    marginBottom: 10,
-  },
-  heroSubtitle: {
-    fontSize: 18,
-    textAlign: 'center',
-    fontFamily: Fonts.body,
+  carouselCard: {
+    width: 300,
   },
   section: {
     paddingVertical: 24,

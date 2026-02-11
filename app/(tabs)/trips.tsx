@@ -2,8 +2,8 @@ import { TripCard } from '@/components/TripCard';
 import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'expo-router';
-import { Search, SlidersHorizontal } from 'lucide-react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Search, SlidersHorizontal, X } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -15,29 +15,44 @@ export default function TripsScreen() {
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
     const router = useRouter();
+    const { destinationId } = useLocalSearchParams();
 
     useEffect(() => {
         fetchTrips();
-    }, []);
+    }, [destinationId]);
 
     const fetchTrips = async () => {
         setLoading(true);
         try {
-            const { data, error } = await supabase
+            let query = supabase
                 .from('trips')
                 .select(`
-          id,
-          name,
-          short_description,
-          main_featured_image_url,
-          price,
-          destination:destinations(name)
-        `)
+                  id,
+                  name,
+                  short_description,
+                  main_featured_image_url,
+                  price,
+                  destination_id,
+                  destination:destinations(name)
+                `)
                 .order('name', { ascending: true });
 
+            if (destinationId) {
+                query = query.eq('destination_id', destinationId);
+            }
+
+            const { data, error } = await query;
+
             if (error) throw error;
+
             setTrips(data || []);
             setFilteredTrips(data || []);
+
+            // If filtering by destination, clear any existing search query to avoid confusion
+            if (destinationId) {
+                setSearchQuery('');
+            }
+
         } catch (error) {
             console.error('Error fetching trips:', error);
         } finally {
@@ -58,10 +73,16 @@ export default function TripsScreen() {
         setFilteredTrips(filtered);
     };
 
+    const clearFilter = () => {
+        router.setParams({ destinationId: '' });
+    };
+
     return (
         <View style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
-                <Text style={[styles.title, { color: theme.heading }]}>All Trips</Text>
+                <Text style={[styles.title, { color: theme.heading }]}>
+                    {destinationId ? 'Trips in Destination' : 'All Trips'}
+                </Text>
                 <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
                     <Search size={20} color={theme.secondaryText} />
                     <TextInput
@@ -71,9 +92,15 @@ export default function TripsScreen() {
                         value={searchQuery}
                         onChangeText={handleSearch}
                     />
-                    <TouchableOpacity style={styles.filterBtn}>
-                        <SlidersHorizontal size={20} color={theme.tint} />
-                    </TouchableOpacity>
+                    {destinationId ? (
+                        <TouchableOpacity onPress={clearFilter} style={styles.filterBtn}>
+                            <X size={20} color={theme.tint} />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={styles.filterBtn}>
+                            <SlidersHorizontal size={20} color={theme.tint} />
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
 

@@ -122,7 +122,7 @@ export default function HomeScreen() {
             renderItem={({ item }) => (
               <DestinationCard
                 destination={item}
-                onPress={() => router.push({ pathname: '/(tabs)/destinations', params: { destinationId: item.id } })}
+                onPress={() => router.push({ pathname: '/(tabs)/trips', params: { destinationId: item.id } })}
               />
             )}
             contentContainerStyle={styles.horizontalList}

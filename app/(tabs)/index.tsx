@@ -82,7 +82,7 @@ export default function HomeScreen() {
             />
             <View style={styles.greetingContainer}>
               <Text style={[styles.greetingText, { color: theme.text }]}>Hello, {userInfo?.firstName || 'Traveler'}</Text>
-              <Text style={[styles.titleText, { color: theme.heading }]}>Find Best Hotel</Text>
+              <Text style={[styles.titleText, { color: theme.heading }]}>Find the best trips</Text>
             </View>
           </View>
           <View style={[styles.notificationButton, { backgroundColor: theme.card }]}>

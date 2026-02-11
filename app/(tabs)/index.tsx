@@ -132,7 +132,7 @@ export default function HomeScreen() {
         {/* Featured Trips */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.heading }]}>More Trips</Text>
-          {trips.slice(1).map((trip) => (
+          {trips.slice(1).reverse().map((trip) => (
             <TripCard
               key={trip.id}
               trip={trip}

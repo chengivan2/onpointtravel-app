@@ -2,6 +2,7 @@ import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { Link, useRouter } from 'expo-router';
+import { Eye, EyeOff } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -10,6 +11,8 @@ export default function SignUp() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -91,14 +94,26 @@ export default function SignUp() {
 
                     <View style={styles.inputGroup}>
                         <Text style={[styles.label, { color: theme.text }]}>Password</Text>
-                        <TextInput
-                            style={[styles.input, { backgroundColor: theme.card, color: theme.text, borderColor: theme.border }]}
-                            value={password}
-                            onChangeText={setPassword}
-                            placeholder="Create a password"
-                            placeholderTextColor={theme.secondaryText}
-                            secureTextEntry
-                        />
+                        <View style={styles.passwordContainer}>
+                            <TextInput
+                                style={[styles.input, styles.passwordInput, { backgroundColor: theme.card, color: theme.text, borderColor: theme.border }]}
+                                value={password}
+                                onChangeText={setPassword}
+                                placeholder="Create a password"
+                                placeholderTextColor={theme.secondaryText}
+                                secureTextEntry={!showPassword}
+                            />
+                            <TouchableOpacity
+                                onPress={() => setShowPassword(!showPassword)}
+                                style={styles.eyeIcon}
+                            >
+                                {showPassword ? (
+                                    <EyeOff size={20} color={theme.secondaryText} />
+                                ) : (
+                                    <Eye size={20} color={theme.secondaryText} />
+                                )}
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     {error && <Text style={styles.errorText}>{error}</Text>}
@@ -175,6 +190,19 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 15,
         fontFamily: Fonts.body,
+    },
+    passwordContainer: {
+        position: 'relative',
+        justifyContent: 'center',
+    },
+    passwordInput: {
+        paddingRight: 50,
+    },
+    eyeIcon: {
+        position: 'absolute',
+        right: 15,
+        height: 50,
+        justifyContent: 'center',
     },
     button: {
         height: 50,

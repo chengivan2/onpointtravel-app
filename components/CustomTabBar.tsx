@@ -16,7 +16,7 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
             <View style={[
                 styles.tabBar,
                 {
-                    backgroundColor: theme.card + 'ee', // Adding opacity for glass effect
+                    backgroundColor: colorScheme === 'dark' ? 'rgba(20, 30, 20, 0.8)' : 'rgba(255, 255, 255, 0.9)',
                     borderColor: theme.border,
                 }
             ]}>
@@ -66,12 +66,13 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
                             accessibilityRole="button"
                             accessibilityState={isFocused ? { selected: true } : {}}
                             accessibilityLabel={options.tabBarAccessibilityLabel}
-                            testID={options.tabBarTestID}
                             onPress={onPress}
                             onLongPress={onLongPress}
                             style={[
                                 styles.tabItem,
-                                isFocused && { backgroundColor: theme.tint + '20' } // Light background for active tab
+                                isFocused && {
+                                    backgroundColor: colorScheme === 'dark' ? 'rgba(100, 255, 150, 0.2)' : 'rgba(0, 0, 0, 0.05)'
+                                }
                             ]}
                         >
                             <IconSymbol

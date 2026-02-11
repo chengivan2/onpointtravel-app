@@ -54,9 +54,6 @@ export const TripCard = ({ trip, onPress, style }: TripCardProps) => {
                         </Text>
                         <Text style={[styles.perPerson, { color: theme.secondaryText }]}>per person</Text>
                     </View>
-                    <View style={[styles.bookBtn, { backgroundColor: theme.btnBackground }]}>
-                        <Text style={[styles.bookBtnText, { color: theme.btnText }]}>Book</Text>
-                    </View>
                 </View>
             </View>
         </TouchableOpacity>

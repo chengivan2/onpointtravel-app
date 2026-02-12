@@ -77,12 +77,16 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Image
-              source={{ uri: userInfo?.avatarUrl || 'https://via.placeholder.com/150' }}
-              style={styles.avatar}
-            />
+            {userInfo?.avatarUrl && (
+              <Image
+                source={{ uri: userInfo.avatarUrl }}
+                style={styles.avatar}
+              />
+            )}
             <View style={styles.greetingContainer}>
-              <Text style={[styles.greetingText, { color: theme.text }]}>Hello, {userInfo?.firstName || 'Traveler'}</Text>
+              <Text style={[styles.greetingText, { color: theme.text }]}>
+                {userInfo?.firstName ? `Hello, ${userInfo.firstName}` : 'Hello traveler'}
+              </Text>
               <Text style={[styles.titleText, { color: theme.heading }]}>Featured trips</Text>
             </View>
           </View>

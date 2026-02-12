@@ -89,12 +89,6 @@ export default function TripDetails() {
                 <View style={styles.content}>
                     <View style={styles.header}>
                         <Text style={[styles.title, { color: theme.heading }]}>{trip.name}</Text>
-                        <View style={styles.priceContainer}>
-                            <Text style={[styles.price, { color: theme.tint }]}>
-                                ${trip.price?.toLocaleString()}
-                            </Text>
-                            <Text style={[styles.perPerson, { color: theme.secondaryText }]}>/ person</Text>
-                        </View>
                     </View>
 
                     <View style={styles.locationContainer}>

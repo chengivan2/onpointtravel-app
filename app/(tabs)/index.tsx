@@ -5,9 +5,9 @@ import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'expo-router';
-import { Bell } from 'lucide-react-native';
+import { Settings } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -89,9 +89,12 @@ export default function HomeScreen() {
               </Text>
             </View>
           </View>
-          <View style={[styles.notificationButton, { backgroundColor: theme.card }]}>
-            <Bell size={24} color={theme.text} />
-          </View>
+          <TouchableOpacity
+            style={[styles.notificationButton, { backgroundColor: theme.card }]}
+            onPress={() => router.push('/settings')}
+          >
+            <Settings size={22} color={theme.text} />
+          </TouchableOpacity>
         </View>
 
         {/* Hero Section */}

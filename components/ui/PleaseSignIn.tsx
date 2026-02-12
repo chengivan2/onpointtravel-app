@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     loginBtn: {
         paddingHorizontal: 40,
         paddingVertical: 14,
-        borderRadius: 16,
+        borderRadius: 99,
         elevation: 2,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },

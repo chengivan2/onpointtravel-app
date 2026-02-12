@@ -58,7 +58,7 @@ export default function ProfileScreen() {
                         style={[styles.menuItem, { borderBottomColor: theme.border }]}
                         onPress={() => {
                             if (item.label === 'Settings') {
-                                router.push('/settings');
+                                router.push('/settings' as any);
                             }
                         }}
                     >
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
         marginTop: 40,
         marginHorizontal: 30,
         height: 56,
-        borderRadius: 16,
+        borderRadius: 99,
         borderWidth: 1,
     },
     signOutText: {
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingHorizontal: 30,
         paddingVertical: 12,
-        borderRadius: 8,
+        borderRadius: 99,
     },
     btnText: {
         fontSize: 16,

@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     },
     bookingBtn: {
         height: 56,
-        borderRadius: 12,
+        borderRadius: 99,
         justifyContent: 'center',
         alignItems: 'center',
     },

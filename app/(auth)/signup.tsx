@@ -23,7 +23,7 @@ export default function SignUp() {
         setLoading(true);
         setError(null);
         try {
-            const { error, data } = await supabase.auth.signUp({
+            const { error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     },
     button: {
         height: 50,
-        borderRadius: 8,
+        borderRadius: 99,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 10,

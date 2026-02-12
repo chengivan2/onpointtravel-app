@@ -5,10 +5,10 @@ import { supabase } from '@/lib/supabase';
 import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Calendar, ChevronLeft, MapPin, Star, Users } from 'lucide-react-native';
-import React, { useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const { width } = Dimensions.get('window');
+
 
 export default function TripDetails() {
     const { id: rawId } = useLocalSearchParams();
@@ -19,11 +19,7 @@ export default function TripDetails() {
     const theme = Colors[colorScheme];
     const router = useRouter();
 
-    useEffect(() => {
-        if (id) fetchTripDetails();
-    }, [id]);
-
-    const fetchTripDetails = async () => {
+    const fetchTripDetails = useCallback(async () => {
         setLoading(true);
         try {
             const { data, error } = await supabase
@@ -42,7 +38,11 @@ export default function TripDetails() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        if (id) fetchTripDetails();
+    }, [id, fetchTripDetails]);
 
 
 
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     bookButton: {
         paddingHorizontal: 40,
         paddingVertical: 14,
-        borderRadius: 12,
+        borderRadius: 99,
     },
     bookButtonText: {
         fontSize: 16,

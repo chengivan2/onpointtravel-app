@@ -2,9 +2,9 @@ import { Colors, Fonts } from '@/constants/theme';
 import { useAuth } from '@/context/AuthProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'expo-router';
-import { Bell, CreditCard, LogOut, Settings, Shield, User } from 'lucide-react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { Bell, CreditCard, Edit2, LogOut, Shield, User } from 'lucide-react-native';
+import React, { useCallback, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { PleaseSignIn } from '@/components/ui/PleaseSignIn';
@@ -43,11 +43,13 @@ export default function ProfileScreen() {
         }
     }, [user?.id]);
 
-    useEffect(() => {
-        if (user) {
-            fetchUserProfile();
-        }
-    }, [user, fetchUserProfile]);
+    useFocusEffect(
+        useCallback(() => {
+            if (user) {
+                fetchUserProfile();
+            }
+        }, [user, fetchUserProfile])
+    );
 
     const handleSignOut = async () => {
         try {
@@ -68,7 +70,6 @@ export default function ProfileScreen() {
     }
 
     const menuItems = [
-        { icon: <Settings size={22} color={theme.tint} />, label: 'Settings' },
         { icon: <Bell size={22} color={theme.tint} />, label: 'Notifications' },
         { icon: <CreditCard size={22} color={theme.tint} />, label: 'Payment Methods' },
         { icon: <Shield size={22} color={theme.tint} />, label: 'Privacy & Security' },
@@ -91,6 +92,14 @@ export default function ProfileScreen() {
                     {profileData?.firstName || user.user_metadata?.first_name} {profileData?.lastName || user.user_metadata?.last_name}
                 </Text>
                 <Text style={[styles.userEmail, { color: theme.secondaryText }]}>{user.email}</Text>
+
+                <TouchableOpacity
+                    style={[styles.editBtn, { backgroundColor: theme.tint + '20' }]}
+                    onPress={() => router.push('/profile/edit')}
+                >
+                    <Edit2 size={16} color={theme.tint} />
+                    <Text style={[styles.editBtnText, { color: theme.tint }]}>Edit Profile</Text>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.section}>
@@ -99,9 +108,7 @@ export default function ProfileScreen() {
                         key={index}
                         style={[styles.menuItem, { borderBottomColor: theme.border }]}
                         onPress={() => {
-                            if (item.label === 'Settings') {
-                                router.push('/settings' as any);
-                            }
+                            // Navigation for other items can be added here
                         }}
                     >
                         <View style={styles.menuLeft}>
@@ -169,6 +176,20 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: Fonts.body,
         marginTop: 4,
+        marginBottom: 16,
+    },
+    editBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+    },
+    editBtnText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        fontFamily: Fonts.body,
     },
     section: {
         marginTop: 30,

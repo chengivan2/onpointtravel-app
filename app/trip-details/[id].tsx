@@ -1,3 +1,4 @@
+import { BouncingPlane } from '@/components/ui/BouncingPlane';
 import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
@@ -215,6 +216,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         marginBottom: 10,
+        paddingHorizontal: 20,
     },
     title: {
         fontSize: 26,

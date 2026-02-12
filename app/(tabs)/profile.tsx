@@ -6,6 +6,8 @@ import { Bell, CreditCard, LogOut, Settings, Shield, User } from 'lucide-react-n
 import React from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { PleaseSignIn } from '@/components/ui/PleaseSignIn';
+
 export default function ProfileScreen() {
     const { user, signOut } = useAuth();
     const colorScheme = useColorScheme() ?? 'light';
@@ -23,15 +25,10 @@ export default function ProfileScreen() {
 
     if (!user) {
         return (
-            <View style={[styles.centered, { backgroundColor: theme.background }]}>
-                <Text style={[styles.message, { color: theme.text }]}>Please sign in to view your profile</Text>
-                <TouchableOpacity
-                    style={[styles.loginBtn, { backgroundColor: theme.btnBackground }]}
-                    onPress={() => router.push('/(auth)/signin')}
-                >
-                    <Text style={[styles.btnText, { color: theme.btnText }]}>Sign In</Text>
-                </TouchableOpacity>
-            </View>
+            <PleaseSignIn
+                message="Please sign in to view your profile and manage your travel journey"
+                onSignIn={() => router.push('/(auth)/signin')}
+            />
         );
     }
 

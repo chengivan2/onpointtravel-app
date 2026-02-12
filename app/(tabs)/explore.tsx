@@ -3,9 +3,12 @@ import { useAuth } from '@/context/AuthProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import { Calendar, MapPin, ReceiptText } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import { PleaseSignIn } from '@/components/ui/PleaseSignIn';
 
 export default function ExploreScreen() {
   const { user } = useAuth();
@@ -13,6 +16,7 @@ export default function ExploreScreen() {
   const [loading, setLoading] = useState(true);
   const colorScheme = useColorScheme() ?? 'light';
   const theme = Colors[colorScheme];
+  const router = useRouter();
 
   useEffect(() => {
     if (user) fetchBookings();
@@ -82,10 +86,10 @@ export default function ExploreScreen() {
 
   if (!user) {
     return (
-      <View style={[styles.centered, { backgroundColor: theme.background }]}>
-        <Text style={[styles.title, { color: theme.heading }]}>My Bookings</Text>
-        <Text style={[styles.message, { color: theme.text }]}>Please sign in to view your bookings</Text>
-      </View>
+      <PleaseSignIn
+        message="Please sign in to view your bookings and start your next adventure"
+        onSignIn={() => router.push('/(auth)/signin')}
+      />
     );
   }
 

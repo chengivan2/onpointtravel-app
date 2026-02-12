@@ -1,7 +1,7 @@
-import { BouncingPlane } from '@/components/ui/BouncingPlane';
 import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
+import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Calendar, ChevronLeft, MapPin, Star, Users } from 'lucide-react-native';
@@ -146,7 +146,11 @@ export default function TripDetails() {
             </ScrollView>
 
             {/* Booking Footer */}
-            <View style={[styles.footer, { backgroundColor: theme.card, borderTopColor: theme.border }]}>
+            <BlurView
+                intensity={80}
+                tint={colorScheme === 'dark' ? 'dark' : 'light'}
+                style={[styles.footer, { borderTopColor: theme.border }]}
+            >
                 <View>
                     <Text style={[styles.totalLabel, { color: theme.secondaryText }]}>Total Price</Text>
                     <Text style={[styles.totalPrice, { color: theme.heading }]}>
@@ -159,7 +163,7 @@ export default function TripDetails() {
                 >
                     <Text style={[styles.bookButtonText, { color: theme.btnText }]}>Book Now</Text>
                 </TouchableOpacity>
-            </View>
+            </BlurView>
         </View>
     );
 }
@@ -290,11 +294,12 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         padding: 20,
-        paddingBottom: 34,
+        paddingBottom: 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderTopWidth: 1,
+        overflow: 'hidden',
     },
     totalLabel: {
         fontSize: 12,

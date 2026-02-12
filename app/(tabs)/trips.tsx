@@ -13,6 +13,7 @@ export default function TripsScreen() {
     const [filteredTrips, setFilteredTrips] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
+    const [destinationName, setDestinationName] = useState<string | null>(null);
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
     const router = useRouter();
@@ -25,6 +26,18 @@ export default function TripsScreen() {
     const fetchTrips = async () => {
         setLoading(true);
         try {
+            // Fetch destination name if destinationId is present
+            if (destinationId) {
+                const { data: destData } = await supabase
+                    .from('destinations')
+                    .select('name')
+                    .eq('id', destinationId)
+                    .single();
+                if (destData) setDestinationName(destData.name);
+            } else {
+                setDestinationName(null);
+            }
+
             let query = supabase
                 .from('trips')
                 .select(`
@@ -82,7 +95,7 @@ export default function TripsScreen() {
         <View style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <Text style={[styles.title, { color: theme.heading }]}>
-                    {destinationId ? 'Trips in Destination' : 'All Trips'}
+                    {destinationId && destinationName ? `Trips in ${destinationName}` : 'All Trips'}
                 </Text>
                 <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
                     <Search size={20} color={theme.secondaryText} />

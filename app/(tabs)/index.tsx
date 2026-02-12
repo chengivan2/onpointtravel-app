@@ -87,7 +87,6 @@ export default function HomeScreen() {
               <Text style={[styles.greetingText, { color: theme.text }]}>
                 {userInfo?.firstName ? `Hello, ${userInfo.firstName}` : 'Hello traveler'}
               </Text>
-              <Text style={[styles.titleText, { color: theme.heading }]}>Featured trips</Text>
             </View>
           </View>
           <View style={[styles.notificationButton, { backgroundColor: theme.card }]}>
@@ -98,6 +97,7 @@ export default function HomeScreen() {
         {/* Hero Section */}
         {/* Featured Trips Carousel */}
         <View style={styles.carouselSection}>
+          <Text style={[styles.sectionTitle, { color: theme.heading, paddingHorizontal: 20, marginBottom: 10 }]}>Featured trips</Text>
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}

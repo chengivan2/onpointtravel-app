@@ -17,7 +17,8 @@ export default function TripsScreen() {
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
     const router = useRouter();
-    const { destinationId } = useLocalSearchParams();
+    const { destinationId: rawId } = useLocalSearchParams();
+    const destinationId = Array.isArray(rawId) ? rawId[0] : rawId;
 
     useEffect(() => {
         fetchTrips();

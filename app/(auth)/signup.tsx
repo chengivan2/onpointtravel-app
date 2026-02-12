@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { Link, useRouter } from 'expo-router';
 import { Eye, EyeOff } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function SignUp() {
     const [firstName, setFirstName] = useState('');
@@ -18,6 +18,10 @@ export default function SignUp() {
     const router = useRouter();
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
+
+    const lightLogo = require('../../assets/images/logos/onpointhflightmodelogo.png');
+    const darkLogo = require('../../assets/images/logos/onpointhfdarkmodelogo.png');
+    const logoSource = colorScheme === 'dark' ? darkLogo : lightLogo;
 
     const handleSignUp = async () => {
         setLoading(true);
@@ -51,6 +55,7 @@ export default function SignUp() {
         >
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.header}>
+                    <Image source={logoSource} style={styles.logo} resizeMode="contain" />
                     <Text style={[styles.title, { color: theme.heading }]}>Join OnPoint</Text>
                     <Text style={[styles.subtitle, { color: theme.text }]}>Start your adventure today</Text>
                 </View>
@@ -159,6 +164,10 @@ const styles = StyleSheet.create({
     header: {
         alignItems: 'center',
         marginBottom: 40,
+    },
+    logo: {
+        width: 200,
+        height: 80,
     },
     title: {
         fontSize: 32,

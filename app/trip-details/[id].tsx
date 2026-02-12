@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         marginBottom: 10,
-        paddingHorizontal: 20,
     },
     title: {
         fontSize: 26,

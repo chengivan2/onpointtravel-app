@@ -2,12 +2,14 @@ import { Colors, Fonts } from '@/constants/theme';
 import { useAuth } from '@/context/AuthProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
+import * as ImagePicker from 'expo-image-picker';
 import { Stack, useRouter } from 'expo-router';
-import { ChevronLeft, Save, User as UserIcon } from 'lucide-react-native';
+import { ChevronLeft, Pencil, Save, User as UserIcon } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
+    Image,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -57,6 +59,19 @@ export default function EditProfileScreen() {
             Alert.alert('Error', error.message);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const pickImage = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.8,
+        });
+
+        if (!result.canceled) {
+            setAvatarUrl(result.assets[0].uri);
         }
     };
 
@@ -119,11 +134,24 @@ export default function EditProfileScreen() {
             >
                 <ScrollView contentContainerStyle={styles.scrollContent}>
                     <View style={styles.avatarSection}>
-                        <View style={[styles.avatarPlaceholder, { backgroundColor: theme.card, borderColor: theme.tint }]}>
-                            <UserIcon size={40} color={theme.tint} />
-                        </View>
+                        <TouchableOpacity
+                            style={[styles.avatarWrapper, { borderColor: theme.tint }]}
+                            onPress={pickImage}
+                            activeOpacity={0.8}
+                        >
+                            <View style={[styles.avatarContainer, { backgroundColor: theme.card }]}>
+                                {avatarUrl ? (
+                                    <Image source={{ uri: avatarUrl }} style={styles.avatarImage} />
+                                ) : (
+                                    <UserIcon size={40} color={theme.tint} />
+                                )}
+                            </View>
+                            <View style={[styles.pencilContainer, { backgroundColor: theme.tint }]}>
+                                <Pencil size={14} color="#fff" />
+                            </View>
+                        </TouchableOpacity>
                         <Text style={[styles.avatarHint, { color: theme.secondaryText }]}>
-                            Paste an image URL below to update your avatar
+                            Tap to change profile picture
                         </Text>
                     </View>
 
@@ -155,23 +183,6 @@ export default function EditProfileScreen() {
                                 onChangeText={setLastName}
                                 placeholder="Enter last name"
                                 placeholderTextColor={theme.secondaryText}
-                            />
-                        </View>
-
-                        <View style={styles.inputGroup}>
-                            <Text style={[styles.label, { color: theme.secondaryText }]}>Avatar URL</Text>
-                            <TextInput
-                                style={[styles.input, {
-                                    backgroundColor: theme.card,
-                                    color: theme.text,
-                                    borderColor: theme.border
-                                }]}
-                                value={avatarUrl}
-                                onChangeText={setAvatarUrl}
-                                placeholder="https://example.com/image.jpg"
-                                placeholderTextColor={theme.secondaryText}
-                                autoCapitalize="none"
-                                keyboardType="url"
                             />
                         </View>
 
@@ -236,20 +247,40 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 30,
     },
-    avatarPlaceholder: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        borderWidth: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+    avatarWrapper: {
+        position: 'relative',
         marginBottom: 12,
     },
+    avatarContainer: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+    },
+    avatarImage: {
+        width: '100%',
+        height: '100%',
+    },
+    pencilContainer: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 3,
+        borderColor: '#fff',
+    },
     avatarHint: {
-        fontSize: 12,
+        fontSize: 14,
+        fontWeight: '500',
         textAlign: 'center',
         fontFamily: Fonts.body,
-        paddingHorizontal: 40,
     },
     form: {
         gap: 20,

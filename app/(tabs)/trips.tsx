@@ -5,7 +5,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Search, SlidersHorizontal, X } from 'lucide-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function TripsScreen() {
@@ -20,11 +20,7 @@ export default function TripsScreen() {
     const { destinationId: rawId } = useLocalSearchParams();
     const destinationId = Array.isArray(rawId) ? rawId[0] : rawId;
 
-    useEffect(() => {
-        fetchTrips();
-    }, [destinationId]);
-
-    const fetchTrips = async () => {
+    const fetchTrips = useCallback(async () => {
         setLoading(true);
         try {
             // Fetch destination name if destinationId is present
@@ -73,7 +69,11 @@ export default function TripsScreen() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [destinationId]);
+
+    useEffect(() => {
+        fetchTrips();
+    }, [destinationId, fetchTrips]);
 
     const handleSearch = (query: string) => {
         setSearchQuery(query);

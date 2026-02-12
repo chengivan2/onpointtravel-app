@@ -11,7 +11,8 @@ import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from
 const { width } = Dimensions.get('window');
 
 export default function TripDetails() {
-    const { id } = useLocalSearchParams();
+    const { id: rawId } = useLocalSearchParams();
+    const id = Array.isArray(rawId) ? rawId[0] : rawId;
     const [trip, setTrip] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const colorScheme = useColorScheme() ?? 'light';

@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { Calendar, ChevronLeft, MapPin, Star, Users } from 'lucide-react-native';
+import { ChevronLeft, MapPin, Star } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -102,14 +102,6 @@ export default function TripDetails() {
                         <View style={styles.statItem}>
                             <Star size={18} color="#FFD700" fill="#FFD700" />
                             <Text style={[styles.statText, { color: theme.text }]}>{trip.rating || '4.8'}</Text>
-                        </View>
-                        <View style={styles.statItem}>
-                            <Calendar size={18} color={theme.tint} />
-                            <Text style={[styles.statText, { color: theme.text }]}>7 Days</Text>
-                        </View>
-                        <View style={styles.statItem}>
-                            <Users size={18} color={theme.tint} />
-                            <Text style={[styles.statText, { color: theme.text }]}>10+ People</Text>
                         </View>
                     </View>
 

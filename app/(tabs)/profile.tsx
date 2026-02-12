@@ -1,10 +1,11 @@
 import { Colors, Fonts } from '@/constants/theme';
 import { useAuth } from '@/context/AuthProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'expo-router';
 import { Bell, CreditCard, LogOut, Settings, Shield, User } from 'lucide-react-native';
-import React from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { PleaseSignIn } from '@/components/ui/PleaseSignIn';
 
@@ -13,6 +14,40 @@ export default function ProfileScreen() {
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
     const router = useRouter();
+
+    const [profileData, setProfileData] = useState<{
+        firstName: string;
+        lastName: string;
+        avatarUrl: string | null;
+    } | null>(null);
+
+    const fetchUserProfile = useCallback(async () => {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .select('first_name, last_name, logo_url')
+                .eq('id', user?.id)
+                .single();
+
+            if (error) throw error;
+
+            if (data) {
+                setProfileData({
+                    firstName: data.first_name || '',
+                    lastName: data.last_name || '',
+                    avatarUrl: data.logo_url
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
+    }, [user?.id]);
+
+    useEffect(() => {
+        if (user) {
+            fetchUserProfile();
+        }
+    }, [user, fetchUserProfile]);
 
     const handleSignOut = async () => {
         try {
@@ -43,10 +78,17 @@ export default function ProfileScreen() {
         <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={[styles.header, { backgroundColor: theme.card }]}>
                 <View style={[styles.avatarContainer, { backgroundColor: theme.background, borderColor: theme.tint }]}>
-                    <User size={50} color={theme.tint} />
+                    {profileData?.avatarUrl ? (
+                        <Image
+                            source={{ uri: profileData.avatarUrl }}
+                            style={styles.avatar}
+                        />
+                    ) : (
+                        <User size={50} color={theme.tint} />
+                    )}
                 </View>
                 <Text style={[styles.userName, { color: theme.heading }]}>
-                    {user.user_metadata?.first_name} {user.user_metadata?.last_name}
+                    {profileData?.firstName || user.user_metadata?.first_name} {profileData?.lastName || user.user_metadata?.last_name}
                 </Text>
                 <Text style={[styles.userEmail, { color: theme.secondaryText }]}>{user.email}</Text>
             </View>
@@ -112,6 +154,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 2,
         marginBottom: 16,
+        overflow: 'hidden',
+    },
+    avatar: {
+        width: '100%',
+        height: '100%',
     },
     userName: {
         fontSize: 24,

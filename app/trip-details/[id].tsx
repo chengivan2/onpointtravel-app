@@ -5,7 +5,7 @@ import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Calendar, ChevronLeft, MapPin, Star, Users } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -42,10 +42,12 @@ export default function TripDetails() {
         }
     };
 
+
+
     if (loading) {
         return (
             <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
-                <ActivityIndicator size="large" color={theme.tint} />
+                <BouncingPlane color={theme.tint} />
             </View>
         );
     }

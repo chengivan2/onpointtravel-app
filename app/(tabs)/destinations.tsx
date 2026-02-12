@@ -1,11 +1,12 @@
 import { DestinationCard } from '@/components/DestinationCard';
+import { BouncingPlane } from '@/components/ui/BouncingPlane';
 import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'expo-router';
 import { Search } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function DestinationsScreen() {
     const [destinations, setDestinations] = useState<any[]>([]);
@@ -67,9 +68,11 @@ export default function DestinationsScreen() {
                 </View>
             </View>
 
+
+
             {loading ? (
                 <View style={styles.centered}>
-                    <ActivityIndicator size="large" color={theme.tint} />
+                    <BouncingPlane color={theme.tint} />
                 </View>
             ) : (
                 <FlatList

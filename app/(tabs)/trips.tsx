@@ -1,11 +1,12 @@
 import { TripCard } from '@/components/TripCard';
+import { BouncingPlane } from '@/components/ui/BouncingPlane';
 import { Colors, Fonts } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Search, SlidersHorizontal, X } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function TripsScreen() {
     const [trips, setTrips] = useState<any[]>([]);
@@ -104,9 +105,11 @@ export default function TripsScreen() {
                 </View>
             </View>
 
+
+
             {loading ? (
                 <View style={styles.centered}>
-                    <ActivityIndicator size="large" color={theme.tint} />
+                    <BouncingPlane color={theme.tint} />
                 </View>
             ) : (
                 <FlatList

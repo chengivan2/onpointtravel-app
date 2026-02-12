@@ -56,6 +56,11 @@ export default function ProfileScreen() {
                     <TouchableOpacity
                         key={index}
                         style={[styles.menuItem, { borderBottomColor: theme.border }]}
+                        onPress={() => {
+                            if (item.label === 'Settings') {
+                                router.push('/settings');
+                            }
+                        }}
                     >
                         <View style={styles.menuLeft}>
                             {item.icon}

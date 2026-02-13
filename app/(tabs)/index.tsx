@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     paddingRight: 60,
   },
   promoTitle: {
-    color: '#70ffc1',
+    color: '#ffffff',
     fontSize: 32,
     fontFamily: Fonts.heading,
     fontWeight: '900',

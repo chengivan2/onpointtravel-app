@@ -19,13 +19,15 @@ export default function BookingDetailsScreen() {
     const theme = Colors[colorScheme];
     const router = useRouter();
 
-    useEffect(() => {
-        if (id && user) {
-            fetchBookingDetails();
-        }
-    }, [id, user]);
+    const bookingId = typeof id === 'string' ? id : id?.[0];
 
-    const fetchBookingDetails = async () => {
+    useEffect(() => {
+        if (bookingId && user) {
+            fetchBookingDetails(bookingId);
+        }
+    }, [bookingId, user]);
+
+    const fetchBookingDetails = async (bid: string) => {
         setLoading(true);
         try {
             // Fetch booking with trip details
@@ -38,7 +40,7 @@ export default function BookingDetailsScreen() {
                         destination:destinations(*)
                     )
                 `)
-                .eq('id', id)
+                .eq('id', bid)
                 .single();
 
             if (bookingError) throw bookingError;
@@ -48,7 +50,7 @@ export default function BookingDetailsScreen() {
             const { data: addonsData, error: addonsError } = await supabase
                 .from('booking_addons')
                 .select('*')
-                .eq('booking_id', id);
+                .eq('booking_id', bid);
 
             if (addonsError) throw addonsError;
             setAddons(addonsData || []);

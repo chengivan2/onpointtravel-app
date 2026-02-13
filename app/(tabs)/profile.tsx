@@ -2,10 +2,11 @@ import { Colors, Fonts } from '@/constants/theme';
 import { useAuth } from '@/context/AuthProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
+import { Image } from 'expo-image';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Bell, CreditCard, Edit2, LogOut, Shield, User } from 'lucide-react-native';
 import React, { useCallback, useState } from 'react';
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { PleaseSignIn } from '@/components/ui/PleaseSignIn';
 
@@ -100,6 +101,21 @@ export default function ProfileScreen() {
                     <Edit2 size={16} color={theme.tint} />
                     <Text style={[styles.editBtnText, { color: theme.tint }]}>Edit Profile</Text>
                 </TouchableOpacity>
+            </View>
+
+            {/* Reward Banner */}
+            <View style={styles.bannerContainer}>
+                <View style={styles.bannerBox}>
+                    <View style={styles.bannerTextContainer}>
+                        <Text style={styles.bannerTitle}>Book More, Save More.</Text>
+                        <Text style={styles.bannerSubtitle}>Book 3 trips and save 25% on your next trip.</Text>
+                    </View>
+                    <Image
+                        source={require('@/assets/images/hand-drawn-lemonade-cartoon-pointing-left-illustration.png')}
+                        style={styles.bannerImage}
+                        contentFit="contain"
+                    />
+                </View>
             </View>
 
             <View style={styles.section}>
@@ -242,5 +258,46 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: Fonts.body,
         textAlign: 'center',
+    },
+    bannerContainer: {
+        paddingHorizontal: 20,
+        marginTop: 24,
+    },
+    bannerBox: {
+        backgroundColor: '#51c246',
+        borderRadius: 24,
+        padding: 24,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        minHeight: 140,
+        position: 'relative',
+        overflow: 'visible',
+    },
+    bannerTextContainer: {
+        flex: 1,
+        paddingRight: 80,
+    },
+    bannerTitle: {
+        color: '#ffffff',
+        fontSize: 24,
+        fontFamily: Fonts.heading,
+        fontWeight: '900',
+        marginBottom: 8,
+        lineHeight: 28,
+    },
+    bannerSubtitle: {
+        color: 'rgba(255, 255, 255, 0.9)',
+        fontSize: 14,
+        fontFamily: Fonts.body,
+        lineHeight: 18,
+    },
+    bannerImage: {
+        position: 'absolute',
+        right: -5,
+        bottom: -10,
+        top: -10,
+        aspectRatio: 1,
+        transform: [{ rotate: '5deg' }],
     },
 });

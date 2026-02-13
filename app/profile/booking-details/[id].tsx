@@ -100,7 +100,7 @@ export default function BookingDetailsScreen() {
         <View style={[styles.container, { backgroundColor: theme.background }]}>
             <Stack.Screen options={{
                 headerShown: true,
-                title: 'Reservation Details',
+                title: 'Booking Details',
                 headerTransparent: true,
                 headerLeft: () => (
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>

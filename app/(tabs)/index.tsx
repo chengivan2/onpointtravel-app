@@ -86,7 +86,7 @@ export default function HomeScreen() {
             )}
             <View style={styles.greetingContainer}>
               <Text style={[styles.greetingText, { color: theme.text }]}>
-                {userInfo?.firstName ? `Hello, ${userInfo.firstName}` : 'Hello traveler'}
+                {userInfo?.firstName ? `Hello, ${userInfo.firstName} 👋` : 'Hello traveler 👋'}
               </Text>
             </View>
           </View>

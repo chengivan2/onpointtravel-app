@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Calendar, MapPin, ReceiptText } from 'lucide-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { PleaseSignIn } from '@/components/ui/PleaseSignIn';
@@ -18,11 +18,7 @@ export default function ExploreScreen() {
   const theme = Colors[colorScheme];
   const router = useRouter();
 
-  useEffect(() => {
-    if (user) fetchBookings();
-  }, [user]);
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     if (!user?.id) return;
     setLoading(true);
     try {
@@ -42,7 +38,11 @@ export default function ExploreScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (user) fetchBookings();
+  }, [user, fetchBookings]);
 
   const renderBookingItem = ({ item }: { item: any }) => (
     <View style={[styles.bookingCard, { backgroundColor: theme.card, borderColor: theme.border }]}>

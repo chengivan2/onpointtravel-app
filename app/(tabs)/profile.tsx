@@ -88,10 +88,10 @@ export default function ProfileScreen() {
     }
 
     const menuItems = [
-        { icon: <Compass size={22} color={theme.tint} />, label: 'My Bookings', route: '/profile/bookings' },
-        { icon: <Bell size={22} color={theme.tint} />, label: 'Notifications' },
-        { icon: <CreditCard size={22} color={theme.tint} />, label: 'Payment Methods' },
-        { icon: <Shield size={22} color={theme.tint} />, label: 'Privacy & Security' },
+        { icon: <Compass size={28} color={theme.tint} />, label: 'My Bookings', route: '/profile/bookings' },
+        { icon: <Bell size={28} color={theme.tint} />, label: 'Notifications' },
+        { icon: <CreditCard size={28} color={theme.tint} />, label: 'Payment Methods' },
+        { icon: <Shield size={28} color={theme.tint} />, label: 'Privacy & Security' },
     ];
 
     return (
@@ -152,14 +152,14 @@ export default function ProfileScreen() {
                 {menuItems.map((item, index) => (
                     <TouchableOpacity
                         key={index}
-                        style={[styles.menuItem, { backgroundColor: theme.card, borderColor: theme.border }]}
+                        style={styles.menuItem}
                         onPress={() => {
                             if (item.route) {
                                 router.push(item.route as any);
                             }
                         }}
                     >
-                        <View style={styles.iconWrapper}>
+                        <View style={[styles.iconWrapper, { backgroundColor: theme.tint + '10' }]}>
                             {item.icon}
                         </View>
                         <Text style={[styles.menuLabel, { color: theme.text }]}>{item.label}</Text>
@@ -248,31 +248,22 @@ const styles = StyleSheet.create({
     },
     menuItem: {
         width: '48%',
-        aspectRatio: 1.1,
-        borderRadius: 20,
-        padding: 20,
+        aspectRatio: 1,
         marginBottom: 16,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
     },
     iconWrapper: {
-        width: 44,
-        height: 44,
-        borderRadius: 12,
+        width: 64,
+        height: 64,
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 12,
-        backgroundColor: 'rgba(0,0,0,0.03)',
     },
     menuLabel: {
-        fontSize: 13,
-        fontWeight: '600',
+        fontSize: 14,
+        fontWeight: '500',
         fontFamily: Fonts.body,
         textAlign: 'center',
     },

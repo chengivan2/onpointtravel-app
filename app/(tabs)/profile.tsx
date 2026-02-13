@@ -136,7 +136,7 @@ export default function ProfileScreen() {
                         <View style={styles.progressContainer}>
                             <View style={[styles.progressBar, { width: `${Math.min((bookingsCount / 3) * 100, 100)}%` }]} />
                         </View>
-                        <Text style={styles.progressText}>{bookingsCount}/3</Text>
+                        <Text style={styles.progressText}>{bookingsCount}/3 to unlock 25% on your next trip</Text>
 
                         <TouchableOpacity
                             style={styles.bannerButton}

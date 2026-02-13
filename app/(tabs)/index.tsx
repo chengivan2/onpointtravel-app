@@ -123,6 +123,11 @@ export default function HomeScreen() {
         {/* Promo Section */}
         <View style={styles.promoContainer}>
           <View style={styles.promoBox}>
+            <Image
+              source={require('@/assets/images/hand-drawn-lemonade-cartoon-illustration.png')}
+              style={styles.promoImage}
+              contentFit="contain"
+            />
             <View style={styles.promoTextContainer}>
               <Text style={styles.promoTitle}>SUMMER DEAL</Text>
               <Text style={styles.promoSubtitle}>Book a trip this summer and get 15% OFF</Text>
@@ -133,11 +138,6 @@ export default function HomeScreen() {
                 <Text style={styles.promoButtonText}>Book a Trip</Text>
               </TouchableOpacity>
             </View>
-            <Image
-              source={require('@/assets/images/hand-drawn-lemonade-cartoon-illustration.png')}
-              style={styles.promoImage}
-              contentFit="contain"
-            />
           </View>
         </View>
 
@@ -258,17 +258,19 @@ const styles = StyleSheet.create({
   promoBox: {
     backgroundColor: '#51c246',
     borderRadius: 24,
-    padding: 32,
+    paddingVertical: 24,
+    paddingRight: 28,
+    paddingLeft: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     minHeight: 160,
     position: 'relative',
-    overflow: 'visible',
+    overflow: 'hidden',
   },
   promoTextContainer: {
     flex: 1,
-    paddingRight: 60,
+    marginLeft: 16,
   },
   promoTitle: {
     color: '#ffffff',
@@ -304,11 +306,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   promoImage: {
-    position: 'absolute',
-    right: -10,
-    bottom: -15, // Slightly more overlap at bottom
-    top: -15,    // Overlap at top
+    height: 160,
     aspectRatio: 1,
-    transform: [{ rotate: '-5deg' }],
+    marginLeft: -10, // Slight negative margin to really push it to the edge
+    transform: [{ rotate: '-2deg' }],
   },
 });

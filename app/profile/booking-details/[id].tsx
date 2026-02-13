@@ -5,7 +5,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { Calendar, ChevronLeft, Clock, Info, MapPin, Users } from 'lucide-react-native';
+import { Calendar, ChevronLeft, Info, MapPin, Users } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -156,7 +156,7 @@ export default function BookingDetailsScreen() {
 
                             <View style={[styles.infoRow, { marginTop: 24 }]}>
                                 <View style={[styles.iconContainer, { backgroundColor: theme.card }]}>
-                                    <Clock size={20} color={theme.tint} />
+                                    <Calendar size={20} color={theme.tint} />
                                 </View>
                                 <View style={styles.infoCol}>
                                     <Text style={[styles.infoLabel, { color: theme.secondaryText }]}>End Date</Text>

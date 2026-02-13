@@ -304,11 +304,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   promoImage: {
-    width: 140,
-    height: 140,
     position: 'absolute',
     right: -10,
-    bottom: -10,
+    bottom: -15, // Slightly more overlap at bottom
+    top: -15,    // Overlap at top
+    aspectRatio: 1,
     transform: [{ rotate: '-5deg' }],
   },
 });

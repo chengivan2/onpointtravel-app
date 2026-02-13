@@ -122,9 +122,9 @@ export default function HomeScreen() {
 
         {/* Promo Section */}
         <View style={styles.promoContainer}>
-          <View style={styles.promoBox}>
+          <View style={[styles.promoBox, colorScheme === 'dark' && { backgroundColor: '#08140f' }]}>
             <View style={styles.promoTextContainer}>
-              <Text style={styles.promoTitle}>SUMMER DEAL</Text>
+              <Text style={[styles.promoTitle, colorScheme === 'dark' && { color: theme.tint }]}>SUMMER DEAL</Text>
               <Text style={styles.promoSubtitle}>Book a trip this summer and get 15% OFF</Text>
             </View>
             <Image
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     width: 300,
   },
   section: {
-    paddingVertical: 24,
+    paddingVertical: 18,
     paddingHorizontal: 16,
   },
   sectionTitle: {
@@ -248,7 +248,6 @@ const styles = StyleSheet.create({
   promoContainer: {
     paddingHorizontal: 20,
     marginVertical: 10,
-    marginTop: 10,
   },
   promoBox: {
     backgroundColor: '#1A1A1A',

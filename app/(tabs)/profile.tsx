@@ -148,21 +148,21 @@ export default function ProfileScreen() {
                 </View>
             </View>
 
-            <View style={styles.section}>
+            <View style={styles.menuGrid}>
                 {menuItems.map((item, index) => (
                     <TouchableOpacity
                         key={index}
-                        style={[styles.menuItem, { borderBottomColor: theme.border }]}
+                        style={[styles.menuItem, { backgroundColor: theme.card, borderColor: theme.border }]}
                         onPress={() => {
                             if (item.route) {
                                 router.push(item.route as any);
                             }
                         }}
                     >
-                        <View style={styles.menuLeft}>
+                        <View style={styles.iconWrapper}>
                             {item.icon}
-                            <Text style={[styles.menuLabel, { color: theme.text }]}>{item.label}</Text>
                         </View>
+                        <Text style={[styles.menuLabel, { color: theme.text }]}>{item.label}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
@@ -239,26 +239,42 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: Fonts.body,
     },
-    section: {
-        marginTop: 30,
+    menuGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
         paddingHorizontal: 20,
+        marginTop: 30,
     },
     menuItem: {
-        flexDirection: 'row',
+        width: '48%',
+        aspectRatio: 1.1,
+        borderRadius: 20,
+        padding: 20,
+        marginBottom: 16,
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingVertical: 18,
-        borderBottomWidth: 1,
+        justifyContent: 'center',
+        borderWidth: 1,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
-    menuLeft: {
-        flexDirection: 'row',
+    iconWrapper: {
+        width: 44,
+        height: 44,
+        borderRadius: 12,
+        justifyContent: 'center',
         alignItems: 'center',
-        gap: 15,
+        marginBottom: 12,
+        backgroundColor: 'rgba(0,0,0,0.03)',
     },
     menuLabel: {
-        fontSize: 16,
-        fontWeight: '500',
+        fontSize: 13,
+        fontWeight: '600',
         fontFamily: Fonts.body,
+        textAlign: 'center',
     },
     signOutBtn: {
         flexDirection: 'row',

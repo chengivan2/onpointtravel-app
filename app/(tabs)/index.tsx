@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   promoContainer: {
     paddingHorizontal: 20,
     marginVertical: 10,
-    marginTop: 20,
+    marginTop: 10,
   },
   promoBox: {
     backgroundColor: '#1A1A1A',

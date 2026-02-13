@@ -87,6 +87,15 @@ export default function BookingDetailsScreen() {
         });
     };
 
+    const formatAddonType = (type: string) => {
+        if (type.toLowerCase() === 'suv') return 'SUV';
+        if (type.toLowerCase() === 'taxi') return 'Taxi';
+        return type
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
     return (
         <View style={[styles.container, { backgroundColor: theme.background }]}>
             <Stack.Screen options={{
@@ -170,7 +179,7 @@ export default function BookingDetailsScreen() {
                                 {addons.map((addon) => (
                                     <View key={addon.id} style={styles.addonItem}>
                                         <View style={styles.addonInfo}>
-                                            <Text style={[styles.addonName, { color: theme.text }]}>{addon.addon_type}</Text>
+                                            <Text style={[styles.addonName, { color: theme.text }]}>{formatAddonType(addon.addon_type)}</Text>
                                             <Text style={[styles.addonQty, { color: theme.secondaryText }]}>Qty: {addon.quantity}</Text>
                                         </View>
                                         <Text style={[styles.addonPrice, { color: theme.tint }]}>${(addon.price * addon.quantity).toFixed(2)}</Text>

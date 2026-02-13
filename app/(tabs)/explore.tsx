@@ -23,6 +23,7 @@ export default function ExploreScreen() {
   }, [user]);
 
   const fetchBookings = async () => {
+    if (!user?.id) return;
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -31,7 +32,7 @@ export default function ExploreScreen() {
           *,
           trip:trips(*)
         `)
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .order('booked_at', { ascending: false });
 
       if (error) throw error;

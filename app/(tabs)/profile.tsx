@@ -21,13 +21,16 @@ export default function ProfileScreen() {
         lastName: string;
         avatarUrl: string | null;
     } | null>(null);
+    const [bookingsCount, setBookingsCount] = useState(0);
 
     const fetchUserProfile = useCallback(async () => {
+        if (!user?.id) return;
         try {
+            // Fetch profile data
             const { data, error } = await supabase
                 .from('users')
                 .select('first_name, last_name, logo_url')
-                .eq('id', user?.id)
+                .eq('id', user.id)
                 .single();
 
             if (error) throw error;
@@ -39,8 +42,22 @@ export default function ProfileScreen() {
                     avatarUrl: data.logo_url
                 });
             }
+
+            // Fetch recent bookings count (last 30 days)
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            const { count, error: countError } = await supabase
+                .from('bookings')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', user.id)
+                .gte('booked_at', thirtyDaysAgo.toISOString());
+
+            if (countError) throw countError;
+            setBookingsCount(count || 0);
+
         } catch (error) {
-            console.error('Error fetching user profile:', error);
+            console.error('Error fetching dashboard data:', error);
         }
     }, [user?.id]);
 
@@ -108,7 +125,19 @@ export default function ProfileScreen() {
                 <View style={styles.bannerBox}>
                     <View style={styles.bannerTextContainer}>
                         <Text style={styles.bannerTitle}>Book More, Save More.</Text>
-                        <Text style={styles.bannerSubtitle}>Book 3 trips in 30 days and save 25% on your next trip.</Text>
+                        <Text style={styles.bannerSubtitle}>You have booked {bookingsCount} trips in the last 30 days.</Text>
+
+                        <View style={styles.progressContainer}>
+                            <View style={[styles.progressBar, { width: `${Math.min((bookingsCount / 3) * 100, 100)}%` }]} />
+                        </View>
+                        <Text style={styles.progressText}>{bookingsCount}/3</Text>
+
+                        <TouchableOpacity
+                            style={styles.bannerButton}
+                            onPress={() => router.push('/(tabs)/trips')}
+                        >
+                            <Text style={styles.bannerButtonText}>Book a Trip</Text>
+                        </TouchableOpacity>
                     </View>
                     <Image
                         source={require('@/assets/images/hand-drawn-lemonade-cartoon-pointing-left-illustration.png')}
@@ -276,7 +305,7 @@ const styles = StyleSheet.create({
     },
     bannerTextContainer: {
         flex: 1,
-        paddingRight: 80,
+        paddingRight: 110,
     },
     bannerTitle: {
         color: '#ffffff',
@@ -291,6 +320,38 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: Fonts.body,
         lineHeight: 18,
+        marginBottom: 12,
+    },
+    progressContainer: {
+        height: 8,
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        borderRadius: 4,
+        marginBottom: 4,
+    },
+    progressBar: {
+        height: '100%',
+        backgroundColor: '#ffffff',
+        borderRadius: 4,
+    },
+    progressText: {
+        color: '#ffffff',
+        fontSize: 12,
+        fontFamily: Fonts.body,
+        fontWeight: 'bold',
+        marginBottom: 16,
+    },
+    bannerButton: {
+        backgroundColor: '#ffffff',
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 12,
+        alignSelf: 'flex-start',
+    },
+    bannerButtonText: {
+        color: '#51c246',
+        fontSize: 14,
+        fontFamily: Fonts.heading,
+        fontWeight: 'bold',
     },
     bannerImage: {
         position: 'absolute',

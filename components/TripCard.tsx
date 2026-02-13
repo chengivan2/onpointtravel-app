@@ -1,9 +1,11 @@
 import { Colors, Fonts } from '@/constants/theme';
+import { useAuth } from '@/context/AuthProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { supabase } from '@/lib/supabase';
 import { Image } from 'expo-image';
-import { MapPin } from 'lucide-react-native';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Heart, MapPin } from 'lucide-react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface TripCardProps {
     trip: any;
@@ -12,8 +14,68 @@ interface TripCardProps {
 }
 
 export const TripCard = ({ trip, onPress, style }: TripCardProps) => {
+    const { user } = useAuth();
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isToggling, setIsToggling] = useState(false);
+
+    const checkFavoriteStatus = useCallback(async () => {
+        if (!user?.id) return;
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .select('favorite_trips')
+                .eq('id', user.id)
+                .single();
+
+            if (error && error.code !== 'PGRST116') throw error;
+
+            if (data?.favorite_trips) {
+                setIsFavorite(data.favorite_trips.includes(trip.id));
+            }
+        } catch (error) {
+            console.error('Error checking favorite status:', error);
+        }
+    }, [user?.id, trip.id]);
+
+    useEffect(() => {
+        if (user) {
+            checkFavoriteStatus();
+        }
+    }, [user, checkFavoriteStatus]);
+
+    const toggleFavorite = async () => {
+        if (!user) return;
+        setIsToggling(true);
+        try {
+            const { data: userData } = await supabase
+                .from('users')
+                .select('favorite_trips')
+                .eq('id', user.id)
+                .single();
+
+            let favorites = userData?.favorite_trips || [];
+            if (isFavorite) {
+                favorites = favorites.filter((id: string) => id !== trip.id);
+            } else {
+                favorites = [...favorites, trip.id];
+            }
+
+            const { error } = await supabase
+                .from('users')
+                .update({ favorite_trips: favorites })
+                .eq('id', user.id);
+
+            if (!error) {
+                setIsFavorite(!isFavorite);
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+        } finally {
+            setIsToggling(false);
+        }
+    };
 
     return (
         <TouchableOpacity
@@ -21,12 +83,29 @@ export const TripCard = ({ trip, onPress, style }: TripCardProps) => {
             onPress={onPress}
             activeOpacity={0.8}
         >
-            <Image
-                source={{ uri: trip.main_featured_image_url }}
-                style={styles.image}
-                contentFit="cover"
-                transition={300}
-            />
+            <View style={styles.imageWrapper}>
+                <Image
+                    source={{ uri: trip.main_featured_image_url }}
+                    style={styles.image}
+                    contentFit="cover"
+                    transition={300}
+                />
+                <TouchableOpacity
+                    style={styles.heartButton}
+                    onPress={toggleFavorite}
+                    disabled={isToggling}
+                >
+                    {isToggling ? (
+                        <ActivityIndicator size="small" color="#fff" />
+                    ) : (
+                        <Heart
+                            size={20}
+                            color={isFavorite ? '#ff4b4b' : '#fff'}
+                            fill={isFavorite ? '#ff4b4b' : 'transparent'}
+                        />
+                    )}
+                </TouchableOpacity>
+            </View>
             <View style={styles.content}>
                 <Text style={[styles.name, { color: theme.heading }]} numberOfLines={1}>
                     {trip.name}
@@ -72,9 +151,25 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
     },
-    image: {
+    imageWrapper: {
+        position: 'relative',
         width: '100%',
         height: 180,
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+    },
+    heartButton: {
+        position: 'absolute',
+        top: 12,
+        right: 12,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     content: {
         padding: 16,

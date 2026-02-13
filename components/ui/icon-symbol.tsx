@@ -19,6 +19,7 @@ const MAPPING = {
   'map.fill': 'map',
   'paperplane.fill': 'send',
   'person.fill': 'person',
+  'heart.fill': 'favorite',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
 } as IconMapping;

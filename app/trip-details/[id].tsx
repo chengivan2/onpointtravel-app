@@ -1,21 +1,25 @@
 import { BouncingPlane } from '@/components/ui/BouncingPlane';
 import { Colors, Fonts } from '@/constants/theme';
+import { useAuth } from '@/context/AuthProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { ChevronLeft, MapPin, Star } from 'lucide-react-native';
+import { ChevronLeft, Heart, MapPin, Star } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
 
 export default function TripDetails() {
+    const { user } = useAuth();
     const { id: rawId } = useLocalSearchParams();
     const id = Array.isArray(rawId) ? rawId[0] : rawId;
     const [trip, setTrip] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isToggling, setIsToggling] = useState(false);
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
     const router = useRouter();
@@ -41,9 +45,61 @@ export default function TripDetails() {
         }
     }, [id]);
 
+    const checkFavoriteStatus = useCallback(async () => {
+        if (!user || !id) return;
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .select('favorite_trips')
+                .eq('id', user.id)
+                .single();
+
+            if (error && error.code !== 'PGRST116') throw error;
+
+            if (data?.favorite_trips) {
+                setIsFavorite(data.favorite_trips.includes(id));
+            }
+        } catch (error) {
+            console.error('Error checking favorite status:', error);
+        }
+    }, [user, id]);
+
     useEffect(() => {
         if (id) fetchTripDetails();
-    }, [id, fetchTripDetails]);
+        if (user && id) checkFavoriteStatus();
+    }, [id, user, fetchTripDetails, checkFavoriteStatus]);
+
+    const toggleFavorite = async () => {
+        if (!user || !id) return;
+        setIsToggling(true);
+        try {
+            const { data: userData } = await supabase
+                .from('users')
+                .select('favorite_trips')
+                .eq('id', user.id)
+                .single();
+
+            let favorites = userData?.favorite_trips || [];
+            if (isFavorite) {
+                favorites = favorites.filter((favId: string) => favId !== id);
+            } else {
+                favorites = [...favorites, id];
+            }
+
+            const { error } = await supabase
+                .from('users')
+                .update({ favorite_trips: favorites })
+                .eq('id', user.id);
+
+            if (!error) {
+                setIsFavorite(!isFavorite);
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+        } finally {
+            setIsToggling(false);
+        }
+    };
 
 
 
@@ -83,6 +139,21 @@ export default function TripDetails() {
                         onPress={() => router.back()}
                     >
                         <ChevronLeft color="#fff" size={24} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.heartButton}
+                        onPress={toggleFavorite}
+                        disabled={isToggling}
+                    >
+                        {isToggling ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                            <Heart
+                                size={24}
+                                color={isFavorite ? '#ff4b4b' : '#fff'}
+                                fill={isFavorite ? '#ff4b4b' : 'transparent'}
+                            />
+                        )}
                     </TouchableOpacity>
                 </View>
 
@@ -186,9 +257,22 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 50,
         left: 20,
-        width: 40,
-        height: 40,
-        borderRadius: 20,
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+    },
+    heartButton: {
+        position: 'absolute',
+        top: 50,
+        right: 20,
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: 'rgba(0,0,0,0.3)',
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 10,

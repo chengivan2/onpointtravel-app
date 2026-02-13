@@ -57,7 +57,7 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
                     if (route.name === 'index') iconName = 'house.fill';
                     else if (route.name === 'trips') iconName = 'briefcase.fill';
                     else if (route.name === 'destinations') iconName = 'map.fill';
-                    else if (route.name === 'explore') iconName = 'paperplane.fill';
+                    else if (route.name === 'favorites') iconName = 'heart.fill';
                     else if (route.name === 'profile') iconName = 'person.fill';
 
                     return (

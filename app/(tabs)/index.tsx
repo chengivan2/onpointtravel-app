@@ -126,6 +126,12 @@ export default function HomeScreen() {
             <View style={styles.promoTextContainer}>
               <Text style={styles.promoTitle}>SUMMER DEAL</Text>
               <Text style={styles.promoSubtitle}>Book a trip this summer and get 15% OFF</Text>
+              <TouchableOpacity
+                style={styles.promoButton}
+                onPress={() => router.push('/(tabs)/trips')}
+              >
+                <Text style={styles.promoButtonText}>Book a Trip</Text>
+              </TouchableOpacity>
             </View>
             <Image
               source={require('@/assets/images/hand-drawn-lemonade-cartoon-illustration.png')}
@@ -277,6 +283,25 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: Fonts.body,
     lineHeight: 20,
+    marginBottom: 20,
+  },
+  promoButton: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  promoButtonText: {
+    color: '#1a4d3a',
+    fontSize: 16,
+    fontFamily: Fonts.heading,
+    fontWeight: 'bold',
   },
   promoImage: {
     width: 140,

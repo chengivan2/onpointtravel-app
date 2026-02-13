@@ -45,7 +45,7 @@ export default function ExploreScreen() {
 
   const renderBookingItem = ({ item }: { item: any }) => (
     <View style={[styles.bookingCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
-      <View style={styles.cardHeader}>
+      <View style={[styles.cardHeader, { paddingRight: 20 }]}>
         <Image
           source={{ uri: item.trip.main_featured_image_url }}
           style={styles.tripImage}
@@ -59,7 +59,7 @@ export default function ExploreScreen() {
         </View>
       </View>
 
-      <View style={styles.cardBody}>
+      <View style={[styles.cardBody, { paddingRight: 24 }]}>
         <View style={styles.detailRow}>
           <Calendar size={16} color={theme.tint} />
           <Text style={[styles.detailText, { color: theme.text }]}>
@@ -68,7 +68,10 @@ export default function ExploreScreen() {
         </View>
         <View style={styles.detailRow}>
           <MapPin size={16} color={theme.tint} />
-          <Text style={[styles.detailText, { color: theme.text }]}>
+          <Text
+            style={[styles.detailText, { color: theme.text }]}
+            numberOfLines={3}
+          >
             {item.trip.short_description}
           </Text>
         </View>
@@ -131,7 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     fontFamily: Fonts.heading,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     marginBottom: 20,
   },
   message: {
@@ -140,7 +143,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   listContent: {
-    padding: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
   },
   bookingCard: {
     borderRadius: 16,
@@ -196,6 +200,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   detailText: {
+    flex: 1,
     fontSize: 14,
     fontFamily: Fonts.body,
   },

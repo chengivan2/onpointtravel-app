@@ -140,18 +140,28 @@ export default function BookingDetailsScreen() {
                     {/* Dates Section */}
                     <View style={styles.section}>
                         <Text style={[styles.sectionTitle, { color: theme.heading }]}>Itinerary</Text>
-                        <View style={styles.infoRow}>
-                            <Calendar size={20} color={theme.tint} />
-                            <View style={styles.infoCol}>
-                                <Text style={[styles.infoLabel, { color: theme.secondaryText }]}>Start Date</Text>
-                                <Text style={[styles.infoValue, { color: theme.text }]}>{formatDate(booking.start_date)}</Text>
+
+                        <View style={styles.itineraryContainer}>
+                            <View style={[styles.itineraryLine, { backgroundColor: theme.tint + '40' }]} />
+
+                            <View style={styles.infoRow}>
+                                <View style={[styles.iconContainer, { backgroundColor: theme.card }]}>
+                                    <Calendar size={20} color={theme.tint} />
+                                </View>
+                                <View style={styles.infoCol}>
+                                    <Text style={[styles.infoLabel, { color: theme.secondaryText }]}>Start Date</Text>
+                                    <Text style={[styles.infoValue, { color: theme.text }]}>{formatDate(booking.start_date)}</Text>
+                                </View>
                             </View>
-                        </View>
-                        <View style={[styles.infoRow, { marginTop: 16 }]}>
-                            <Clock size={20} color={theme.tint} />
-                            <View style={styles.infoCol}>
-                                <Text style={[styles.infoLabel, { color: theme.secondaryText }]}>End Date</Text>
-                                <Text style={[styles.infoValue, { color: theme.text }]}>{formatDate(booking.end_date)}</Text>
+
+                            <View style={[styles.infoRow, { marginTop: 24 }]}>
+                                <View style={[styles.iconContainer, { backgroundColor: theme.card }]}>
+                                    <Clock size={20} color={theme.tint} />
+                                </View>
+                                <View style={styles.infoCol}>
+                                    <Text style={[styles.infoLabel, { color: theme.secondaryText }]}>End Date</Text>
+                                    <Text style={[styles.infoValue, { color: theme.text }]}>{formatDate(booking.end_date)}</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
@@ -317,6 +327,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 16,
+    },
+    itineraryContainer: {
+        position: 'relative',
+    },
+    itineraryLine: {
+        position: 'absolute',
+        left: 10,
+        top: 20,
+        bottom: 20,
+        width: 1,
+        zIndex: -1,
+    },
+    iconContainer: {
+        zIndex: 1,
     },
     infoCol: {
         flex: 1,

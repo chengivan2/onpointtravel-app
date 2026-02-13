@@ -54,7 +54,7 @@ export default function BookingsScreen() {
     const renderBookingItem = ({ item }: { item: any }) => (
         <TouchableOpacity
             style={[styles.bookingCard, { backgroundColor: theme.card, borderColor: theme.border }]}
-            onPress={() => router.push(`/trip-details/${item.trip.id}`)}
+            onPress={() => router.push(`/profile/booking-details/${item.id}`)}
         >
             <Image
                 source={{ uri: item.trip.main_featured_image_url }}

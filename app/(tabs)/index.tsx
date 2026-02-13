@@ -119,6 +119,21 @@ export default function HomeScreen() {
           />
         </View>
 
+        {/* Promo Section */}
+        <View style={styles.promoContainer}>
+          <View style={styles.promoBox}>
+            <View style={styles.promoTextContainer}>
+              <Text style={styles.promoTitle}>SUMMER DEAL</Text>
+              <Text style={styles.promoSubtitle}>Book a trip this summer and get 15% OFF</Text>
+            </View>
+            <Image
+              source={require('@/assets/images/hand-drawn-lemonade-cartoon-illustration.png')}
+              style={styles.promoImage}
+              contentFit="contain"
+            />
+          </View>
+        </View>
+
         {/* Top Destinations */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.heading }]}>Top Destinations</Text>
@@ -228,5 +243,47 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingHorizontal: 20,
+  },
+  promoContainer: {
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    marginTop: 20,
+  },
+  promoBox: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 20,
+    padding: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 140,
+    position: 'relative',
+    overflow: 'visible', // Allow image to extend out
+  },
+  promoTextContainer: {
+    flex: 1,
+    paddingRight: 80, // Space for the overlapping image
+  },
+  promoTitle: {
+    color: '#FFFFFF',
+    fontSize: 28,
+    fontFamily: Fonts.heading,
+    fontWeight: '900',
+    marginBottom: 8,
+    letterSpacing: 1,
+  },
+  promoSubtitle: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 15,
+    fontFamily: Fonts.body,
+    lineHeight: 20,
+  },
+  promoImage: {
+    width: 140,
+    height: 140,
+    position: 'absolute',
+    right: -10,
+    bottom: -10,
+    transform: [{ rotate: '-5deg' }],
   },
 });

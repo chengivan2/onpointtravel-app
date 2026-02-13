@@ -142,7 +142,7 @@ export default function BookingDetailsScreen() {
                         <Text style={[styles.sectionTitle, { color: theme.heading }]}>Itinerary</Text>
 
                         <View style={styles.itineraryContainer}>
-                            <View style={[styles.itineraryLine, { backgroundColor: theme.tint + '40' }]} />
+                            <View style={[styles.itineraryLine, { backgroundColor: theme.tint + '80' }]} />
 
                             <View style={styles.infoRow}>
                                 <View style={[styles.iconContainer, { backgroundColor: theme.card }]}>
@@ -333,14 +333,18 @@ const styles = StyleSheet.create({
     },
     itineraryLine: {
         position: 'absolute',
-        left: 10,
+        left: 14, // Half of iconContainer width (28)
         top: 20,
         bottom: 20,
-        width: 1,
-        zIndex: -1,
+        width: 2,
+        zIndex: 1,
     },
     iconContainer: {
-        zIndex: 1,
+        width: 28,
+        height: 28,
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 2,
     },
     infoCol: {
         flex: 1,

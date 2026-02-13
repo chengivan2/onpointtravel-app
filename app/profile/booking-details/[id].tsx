@@ -7,7 +7,7 @@ import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Calendar, ChevronLeft, Clock, Info, MapPin, Users } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function BookingDetailsScreen() {
     const { id } = useLocalSearchParams();
@@ -86,7 +86,7 @@ export default function BookingDetailsScreen() {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
             <Stack.Screen options={{
                 headerShown: true,
                 title: 'Reservation Details',
@@ -211,7 +211,7 @@ export default function BookingDetailsScreen() {
                     </View>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
         marginLeft: 16,
     },
     imageContainer: {
-        height: 300,
+        height: 350,
         width: '100%',
         position: 'relative',
     },
@@ -247,11 +247,11 @@ const styles = StyleSheet.create({
     },
     imageOverlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: 'rgba(0,0,0,0.25)',
     },
     headerInfo: {
         position: 'absolute',
-        bottom: 24,
+        bottom: 40,
         left: 24,
         right: 24,
     },
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
         opacity: 0.9,
     },
     contentCard: {
-        marginTop: -30,
+        marginTop: -25,
         borderTopLeftRadius: 32,
         borderTopRightRadius: 32,
         padding: 24,

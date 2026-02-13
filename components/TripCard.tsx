@@ -56,10 +56,15 @@ export const TripCard = ({ trip, onPress, style }: TripCardProps) => {
                 .single();
 
             let favorites = userData?.favorite_trips || [];
+
             if (isFavorite) {
+                // Ensure full removal of all instances
                 favorites = favorites.filter((id: string) => id !== trip.id);
             } else {
-                favorites = [...favorites, trip.id];
+                // Ensure no duplicates are added
+                if (!favorites.includes(trip.id)) {
+                    favorites = [...favorites, trip.id];
+                }
             }
 
             const { error } = await supabase
@@ -68,6 +73,7 @@ export const TripCard = ({ trip, onPress, style }: TripCardProps) => {
                 .eq('id', user.id);
 
             if (!error) {
+                // Re-verify the status from the source of truth array we just sent
                 setIsFavorite(!isFavorite);
             }
         } catch (error) {

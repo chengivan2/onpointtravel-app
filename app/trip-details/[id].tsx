@@ -80,10 +80,15 @@ export default function TripDetails() {
                 .single();
 
             let favorites = userData?.favorite_trips || [];
+
             if (isFavorite) {
+                // Ensure full removal of all instances
                 favorites = favorites.filter((favId: string) => favId !== id);
             } else {
-                favorites = [...favorites, id];
+                // Ensure no duplicates are added
+                if (!favorites.includes(id)) {
+                    favorites = [...favorites, id];
+                }
             }
 
             const { error } = await supabase
@@ -92,6 +97,7 @@ export default function TripDetails() {
                 .eq('id', user.id);
 
             if (!error) {
+                // Update local state based on the action performed
                 setIsFavorite(!isFavorite);
             }
         } catch (error) {

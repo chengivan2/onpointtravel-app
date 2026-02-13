@@ -108,7 +108,7 @@ export default function ProfileScreen() {
                 <View style={styles.bannerBox}>
                     <View style={styles.bannerTextContainer}>
                         <Text style={styles.bannerTitle}>Book More, Save More.</Text>
-                        <Text style={styles.bannerSubtitle}>Book 3 trips and save 25% on your next trip.</Text>
+                        <Text style={styles.bannerSubtitle}>Book 3 trips in 30 days and save 25% on your next trip.</Text>
                     </View>
                     <Image
                         source={require('@/assets/images/hand-drawn-lemonade-cartoon-pointing-left-illustration.png')}

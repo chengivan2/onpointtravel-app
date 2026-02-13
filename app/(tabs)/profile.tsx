@@ -4,7 +4,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { supabase } from '@/lib/supabase';
 import { Image } from 'expo-image';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { Bell, CreditCard, Edit2, LogOut, Shield, User } from 'lucide-react-native';
+import { Bell, Compass, CreditCard, Edit2, LogOut, Shield, User } from 'lucide-react-native';
 import React, { useCallback, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -88,6 +88,7 @@ export default function ProfileScreen() {
     }
 
     const menuItems = [
+        { icon: <Compass size={22} color={theme.tint} />, label: 'My Bookings', route: '/profile/bookings' },
         { icon: <Bell size={22} color={theme.tint} />, label: 'Notifications' },
         { icon: <CreditCard size={22} color={theme.tint} />, label: 'Payment Methods' },
         { icon: <Shield size={22} color={theme.tint} />, label: 'Privacy & Security' },
@@ -153,7 +154,9 @@ export default function ProfileScreen() {
                         key={index}
                         style={[styles.menuItem, { borderBottomColor: theme.border }]}
                         onPress={() => {
-                            // Navigation for other items can be added here
+                            if (item.route) {
+                                router.push(item.route as any);
+                            }
                         }}
                     >
                         <View style={styles.menuLeft}>

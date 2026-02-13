@@ -122,9 +122,9 @@ export default function HomeScreen() {
 
         {/* Promo Section */}
         <View style={styles.promoContainer}>
-          <View style={[styles.promoBox, colorScheme === 'dark' && { backgroundColor: '#08140f' }]}>
+          <View style={styles.promoBox}>
             <View style={styles.promoTextContainer}>
-              <Text style={[styles.promoTitle, colorScheme === 'dark' && { color: theme.tint }]}>SUMMER DEAL</Text>
+              <Text style={styles.promoTitle}>SUMMER DEAL</Text>
               <Text style={styles.promoSubtitle}>Book a trip this summer and get 15% OFF</Text>
             </View>
             <Image
@@ -247,30 +247,30 @@ const styles = StyleSheet.create({
   },
   promoContainer: {
     paddingHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 4,
   },
   promoBox: {
-    backgroundColor: '#1A1A1A',
-    borderRadius: 20,
-    padding: 24,
+    backgroundColor: '#51c246',
+    borderRadius: 24,
+    padding: 32,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: 140,
+    minHeight: 160,
     position: 'relative',
-    overflow: 'visible', // Allow image to extend out
+    overflow: 'visible',
   },
   promoTextContainer: {
     flex: 1,
-    paddingRight: 80, // Space for the overlapping image
+    paddingRight: 60,
   },
   promoTitle: {
-    color: '#FFFFFF',
-    fontSize: 28,
+    color: '#70ffc1',
+    fontSize: 32,
     fontFamily: Fonts.heading,
     fontWeight: '900',
     marginBottom: 8,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
   promoSubtitle: {
     color: 'rgba(255, 255, 255, 0.8)',

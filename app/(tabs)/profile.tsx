@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: -20,
         bottom: -5,
-        height: 120,
+        height: 180,
         aspectRatio: 1,
         transform: [{ rotate: '5deg' }],
         opacity: 0.9,

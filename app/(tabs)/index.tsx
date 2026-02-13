@@ -123,11 +123,7 @@ export default function HomeScreen() {
         {/* Promo Section */}
         <View style={styles.promoContainer}>
           <View style={styles.promoBox}>
-            <Image
-              source={require('@/assets/images/hand-drawn-lemonade-cartoon-illustration.png')}
-              style={styles.promoImage}
-              contentFit="contain"
-            />
+
             <View style={styles.promoTextContainer}>
               <Text style={styles.promoTitle}>SUMMER DEAL</Text>
               <Text style={styles.promoSubtitle}>Book a trip this summer and get 15% OFF</Text>
@@ -138,6 +134,11 @@ export default function HomeScreen() {
                 <Text style={styles.promoButtonText}>Book a Trip</Text>
               </TouchableOpacity>
             </View>
+            <Image
+              source={require('@/assets/images/hand-drawn-lemonade-cartoon-illustration.png')}
+              style={styles.promoImage}
+              contentFit="contain"
+            />
           </View>
         </View>
 
@@ -259,8 +260,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#51c246',
     borderRadius: 24,
     paddingVertical: 24,
-    paddingRight: 28,
-    paddingLeft: 0,
+    paddingLeft: 16,
+    paddingRight: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -306,7 +307,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   promoImage: {
-    height: 160,
+    height: 180,
     aspectRatio: 1,
     marginLeft: -10, // Slight negative margin to really push it to the edge
     transform: [{ rotate: '-2deg' }],

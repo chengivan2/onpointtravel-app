@@ -124,6 +124,11 @@ export default function ProfileScreen() {
             {/* Reward Banner */}
             <View style={styles.bannerContainer}>
                 <View style={styles.bannerBox}>
+                    <Image
+                        source={require('@/assets/images/hand-drawn-lemonade-cartoon-pointing-left-illustration.png')}
+                        style={styles.bannerImage}
+                        contentFit="contain"
+                    />
                     <View style={styles.bannerTextContainer}>
                         <Text style={styles.bannerTitle}>Book More, Save More.</Text>
                         <Text style={styles.bannerSubtitle}>You have booked {bookingsCount} trips in the last 30 days.</Text>
@@ -140,11 +145,6 @@ export default function ProfileScreen() {
                             <Text style={styles.bannerButtonText}>Book a Trip</Text>
                         </TouchableOpacity>
                     </View>
-                    <Image
-                        source={require('@/assets/images/hand-drawn-lemonade-cartoon-pointing-left-illustration.png')}
-                        style={styles.bannerImage}
-                        contentFit="contain"
-                    />
                 </View>
             </View>
 
@@ -365,10 +365,11 @@ const styles = StyleSheet.create({
     },
     bannerImage: {
         position: 'absolute',
-        right: -5,
-        bottom: -10,
-        top: -10,
+        right: -20,
+        bottom: -5,
+        height: 120,
         aspectRatio: 1,
         transform: [{ rotate: '5deg' }],
+        opacity: 0.9,
     },
 });

@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HomeScreen() {
   const [destinations, setDestinations] = useState<any[]>([]);
   const [trips, setTrips] = useState<any[]>([]);
+  const [selectedDestinationId, setSelectedDestinationId] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<{ firstName: string | null; avatarUrl: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const colorScheme = useColorScheme() ?? 'light';
@@ -160,16 +161,67 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Featured Trips */}
+        {/* More Trips */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.heading }]}>More Trips</Text>
-          {trips.slice(1).reverse().map((trip) => (
-            <TripCard
-              key={trip.id}
-              trip={trip}
-              onPress={() => router.push(`/trip-details/${trip.id}`)}
+
+          {/* Destination Filters */}
+          <View style={styles.filtersContainer}>
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={[{ id: 'all', name: 'All' }, ...destinations]}
+              keyExtractor={(item) => `filter-${item.id}`}
+              renderItem={({ item }) => {
+                const isActive = item.id === 'all' ? selectedDestinationId === null : selectedDestinationId === item.id;
+                return (
+                  <TouchableOpacity
+                    style={[
+                      styles.filterPill,
+                      { backgroundColor: isActive ? theme.tint : theme.card },
+                      isActive && styles.activeFilterPill
+                    ]}
+                    onPress={() => setSelectedDestinationId(item.id === 'all' ? null : item.id)}
+                  >
+                    <Text
+                      style={[
+                        styles.filterText,
+                        { color: isActive ? '#FFFFFF' : theme.secondaryText },
+                        isActive && styles.activeFilterText
+                      ]}
+                    >
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+              contentContainerStyle={styles.filtersList}
             />
-          ))}
+          </View>
+
+          {trips
+            .filter(trip => selectedDestinationId ? (trip.destination_id === selectedDestinationId || trip.destination?.id === selectedDestinationId) : true)
+            .slice(selectedDestinationId ? 0 : 5) // Skip featured trips in 'All' view to avoid duplicates
+            .map((trip) => (
+              <TripCard
+                key={trip.id}
+                trip={trip}
+                onPress={() => router.push(`/trip-details/${trip.id}`)}
+              />
+            ))}
+
+          {trips.length > 0 && trips.filter(trip => selectedDestinationId ? (trip.destination_id === selectedDestinationId || trip.destination?.id === selectedDestinationId) : true).length === 0 && (
+            <View style={styles.emptyState}>
+              <Text style={[styles.emptyStateText, { color: theme.secondaryText }]}>No trips available for this destination yet.</Text>
+            </View>
+          )}
+
+          {/* Fallback if all trips were in featured carousel and no filter applied */}
+          {!selectedDestinationId && trips.length > 0 && trips.length <= 5 && (
+            <View style={styles.emptyState}>
+              <Text style={[styles.emptyStateText, { color: theme.secondaryText }]}>You&apos;ve seen all our featured trips! Check back soon for more.</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -311,5 +363,44 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     marginLeft: -10, // Slight negative margin to really push it to the edge
     transform: [{ rotate: '-2deg' }],
+  },
+  filtersContainer: {
+    marginBottom: 20,
+    marginHorizontal: -16, // Bleed to edges
+  },
+  filtersList: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  filterPill: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  activeFilterPill: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  filterText: {
+    fontSize: 14,
+    fontFamily: Fonts.body,
+    fontWeight: '500',
+  },
+  activeFilterText: {
+    fontWeight: 'bold',
+  },
+  emptyState: {
+    paddingVertical: 40,
+    alignItems: 'center',
+  },
+  emptyStateText: {
+    fontFamily: Fonts.body,
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
